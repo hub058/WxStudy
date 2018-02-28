@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="cn.wx.web.servlet.AccessTokenInfo" %>
+<%@ page import="cn.wx.common.AccessTokenInfo" %>
 <html>
   <head>
     <title>$微信开发$</title>

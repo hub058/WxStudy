@@ -1,5 +1,7 @@
 package cn.wx.web.servlet;
 
+import cn.wx.util.MessageHandlerUtil;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +17,7 @@ import java.util.Map;
  * Created by xdp on 2016/1/25.
  * 使用@WebServlet注解配置WxServlet,urlPatterns属性指明了WxServlet的访问路径
  */
-@WebServlet(urlPatterns = "/WxServlet")
+@WebServlet(urlPatterns="/WxServlet")
 public class WxServlet extends HttpServlet {
 
     /**
@@ -33,22 +35,28 @@ public class WxServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         System.out.println("请求进入");
-        String result = "";
+        String responseMessage;
         try {
-            Map<String, String> map = MessageHandlerUtil.parseXml(request);
-            System.out.println("开始构造消息");
-            result = MessageHandlerUtil.buildXml(map);
-            System.out.println(result);
-            if (result.equals("")) {
-                result = "未正确响应";
+            //解析微信发来的请求,将解析后的结果封装成Map返回
+            Map<String,String> map = MessageHandlerUtil.parseXml(request);
+            System.out.println("开始构造响应消息");
+            responseMessage = MessageHandlerUtil.buildResponseMessage(map);
+            System.out.println(responseMessage);
+            if(responseMessage.equals("")){
+                responseMessage ="未正确响应";
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("发生异常：" + e.getMessage());
+            System.out.println("发生异常："+ e.getMessage());
+            responseMessage ="未正确响应";
         }
-        response.getWriter().println(result);
+        //发送响应消息
+        response.getWriter().println(responseMessage);
     }
 
+    /**
+     * 确认请求来自微信服务器
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("开始校验签名");
         /**
@@ -62,7 +70,7 @@ public class WxServlet extends HttpServlet {
         String sortString = sort(TOKEN, timestamp, nonce);
         //加密
         String mySignature = sha1(sortString);
-        //校验签名
+        //校验签名,通过检验signature对请求进行校验，若校验成功则原样返回echostr,表示接入成功，否则接入失败
         if (mySignature != null && mySignature != "" && mySignature.equals(signature)) {
             System.out.println("签名校验通过。");
             //如果检验成功输出echostr，微信服务器接收到此输出，才会确认检验完成。
