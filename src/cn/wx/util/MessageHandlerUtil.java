@@ -117,8 +117,8 @@ public class MessageHandlerUtil {
         String content = map.get("Content");
         switch (content) {
             case "文本":
-                String msgText = "孤傲苍狼又要开始写博客总结了,欢迎朋友们访问我在博客园上面写的博客\n" +
-                        "<a href=\"http://www.cnblogs.com/xdp-gacl\">孤傲苍狼的博客</a>";
+                String msgText = "正在学习微信公众号开发，欢迎朋友们访问技术资料整理网站\n" +
+                        "<a href=\"http://www.baidu.com\">点击百度</a>";
                 responseMessage = buildTextMessage(map, msgText);
                 break;
             case "图片":

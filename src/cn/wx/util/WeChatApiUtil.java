@@ -22,13 +22,14 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 /**
- * Created by allen on 2016/1/29.
+ * Created by zed on 2016/1/29.
+ * 备注：此文件中需要秀尴尬文件上传和下载时候的AppID和appSecret，和自己文件的路径
  */
 public class WeChatApiUtil {
     // token 接口(GET)
     private static final String ACCESS_TOKEN = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
     // 素材上传(POST)https://api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE
-    private static final String UPLOAD_MEDIA = "https://api.weixin.qq.com/cgi-bin/media/upload";
+    private static final String UPLOAD_MEDIA = "http://file.api.weixin.qq.com/cgi-bin/media/upload";
     // 素材下载:不支持视频文件的下载(GET)
     private static final String DOWNLOAD_MEDIA = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=%s&media_id=%s";
 
@@ -142,8 +143,8 @@ public class WeChatApiUtil {
      * @comment 不支持视频文件的下载
      */
     public static File downloadMedia(String fileName, String mediaId) {
-        String appId = "wxbe4d433e857e8bb1";
-        String appSecret = "ccbc82d560876711027b3d43a6f2ebda";
+        String appId = "wxe72387c379ebd8c9";
+        String appSecret = "848cdee909f1567802d72168aa1596b3";
         String token = WeChatApiUtil.getToken(appId, appSecret);
         return downloadMedia(fileName,token,mediaId);
     }
@@ -221,8 +222,8 @@ public class WeChatApiUtil {
      */
     public static JSONObject uploadMedia(String filePath,String type){
         File f = new File(filePath); // 获取本地文件
-        String appId = "wxbe4d433e857e8bb1";
-        String appSecret = "ccbc82d560876711027b3d43a6f2ebda";
+        String appId = "wxe72387c379ebd8c9";
+        String appSecret = "848cdee909f1567802d72168aa1596b3";
         String token = WeChatApiUtil.getToken(appId, appSecret);
         JSONObject jsonObject = uploadMedia(f, token, type);
         return jsonObject;
@@ -295,20 +296,20 @@ public class WeChatApiUtil {
 
     public static void main(String[] args) throws Exception{
         //媒体文件路径
-        String filePath = "D:/JavaSoftwareDevelopeFolder/IntelliJ IDEA_Workspace/WxStudy/web/media/image/我.jpg";
-        //String filePath = "D:/JavaSoftwareDevelopeFolder/IntelliJ IDEA_Workspace/WxStudy/web/media/voice/voice.mp3";
-        //String filePath = "D:\\JavaSoftwareDevelopeFolder\\IntelliJ IDEA_Workspace\\WxStudy\\web\\media\\video\\小苹果.mp4";
+//        String filePath = "C:\\Users\\Administrator\\IdeaProjects\\WxStudy\\web\\media\\image\\lhasa.png";
+//        String filePath = "C:\\Users\\Administrator\\IdeaProjects\\WxStudy\\web\\media\\music\\music.mp3";
+        String filePath = "C:\\Users\\Administrator\\IdeaProjects\\WxStudy\\web\\media\\video\\smallApple.mp4";
         //媒体文件类型
-        String type = "image";
-        //String type = "voice";
-        //String type = "video";
+//        String type = "image";
+//        String type = "voice";
+        String type = "video";
         JSONObject uploadResult = uploadMedia(filePath, type);
         //{"media_id":"dSQCiEHYB-pgi7ib5KpeoFlqpg09J31H28rex6xKgwWrln3HY0BTsoxnRV-xC_SQ","created_at":1455520569,"type":"image"}
         System.out.println(uploadResult.toString());
 
         //下载刚刚上传的图片以id命名
         String media_id = uploadResult.getString("media_id");
-        File file = downloadMedia("D:/" + media_id + ".png", media_id);
+        File file = downloadMedia("D:/" + media_id + ".mp4", media_id);
         System.out.println(file.getName());
 
     }
